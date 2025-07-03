@@ -14,7 +14,7 @@ class PayrollResource extends Resource
 {
     protected static ?string $model = Payroll::class;
     protected static ?string $navigationGroup = 'Manage Payroll';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?string $navigationLabel = 'Payrolls';
     protected static ?string $pluralModelLabel = 'Payrolls';
 

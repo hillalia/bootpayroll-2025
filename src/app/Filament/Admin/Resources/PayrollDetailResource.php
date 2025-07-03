@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 class PayrollDetailResource extends Resource
 {
     protected static ?string $model = PayrollDetail::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-information-circle';
     protected static ?string $navigationGroup = 'Manage Payroll';
     protected static ?string $navigationLabel = 'Payroll Details';
     protected static ?string $pluralModelLabel = 'Payroll Details';
