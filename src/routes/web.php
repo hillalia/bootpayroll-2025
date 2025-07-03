@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 /* NOTE: Do Not Remove
 / Livewire asset handling if using sub folder in domain
@@ -18,6 +19,8 @@ Livewire::setScriptRoute(function ($handle) {
 /*
 / END
 */
+
+// routes/web.php
 Route::get('/', function () {
     return view('welcome');
 });

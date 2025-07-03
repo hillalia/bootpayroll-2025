@@ -7,6 +7,8 @@ use App\Filament\Admin\Resources\EmployeeResource\Pages;
 use App\Filament\Admin\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -27,16 +29,39 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
+                // Upload avatar inside the related User model
+                Forms\Components\Section::make('User Info')
+                    ->relationship('user') // this applies to children (i.e. avatar_url)
+                    ->schema([
+                        Forms\Components\FileUpload::make('avatar_url')
+                            ->label('Avatar')
+                            ->image()
+                            ->optimize('webp')
+                            ->imageEditor()
+                            ->imagePreviewHeight('250')
+                            ->panelAspectRatio('7:2')
+                            ->panelLayout('integrated')
+                            ->columnSpan('full')
+                            ->directory('avatars'),
+                    ])
+                    ->columns(1),
+
+                // Select user (for the employee)
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name')
+                    ->label('User')
                     ->required(),
+
+                // Other employee fields
                 Forms\Components\Select::make('division_id')
                     ->relationship('division', 'name')
                     ->required(),
+
                 Forms\Components\Select::make('position')
                     ->label('Position')
                     ->options(\App\Enums\Position::options())
                     ->required(),
+
                 Forms\Components\TextInput::make('encrypt_key')
                     ->required()
                     ->maxLength(255),
@@ -47,6 +72,11 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
+
+                Tables\Columns\ImageColumn::make('user.avatar_url')
+                    ->defaultImageUrl(url('https://www.gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?d=mp&r=g&s=250'))
+                    ->label('Avatar')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
