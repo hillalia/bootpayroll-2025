@@ -2,19 +2,22 @@
 
 namespace Database\Seeders;
 
+use App\Models\Division;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
-class RoleSeeder extends Seeder
+class DivisionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => 'super_admin']);
-        Role::firstOrCreate(['name' => 'hrd']);
-        Role::firstOrCreate(['name' => 'emp']);
+        Division::firstOrCreate([
+            'name' => 'HRD',
+        ]);
+        Division::firstOrCreate([
+            'name' => 'IT',
+        ]);
     }
 }
