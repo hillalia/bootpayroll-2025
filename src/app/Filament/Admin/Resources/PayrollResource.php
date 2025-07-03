@@ -64,7 +64,7 @@ class PayrollResource extends Resource
                 // Optional filters (e.g., by period or division)
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                //Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

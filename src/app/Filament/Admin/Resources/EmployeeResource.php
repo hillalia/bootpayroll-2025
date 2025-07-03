@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -79,10 +80,14 @@ class EmployeeResource extends Resource
                     ->icon('heroicon-o-key')
                     ->requiresConfirmation()
                     ->color('danger')
-                    ->action(function () {
-                        $this->record->encrypt_key = Crypt::encryptString(Str::random(16));
-                        $this->record->save();
-                        $this->notify('success', 'Encryption key has been regenerated.');
+                    ->action(function ($record) {
+                        $record->encrypt_key = Crypt::encryptString(Str::random(16));
+                        $record->save();
+                        Notification::make()
+                            ->success()
+                            ->title('Key Regenerated')
+                            ->body('Encryption key has been regenerated.')
+                            ->send();
                     }),
             ])
             ->bulkActions([

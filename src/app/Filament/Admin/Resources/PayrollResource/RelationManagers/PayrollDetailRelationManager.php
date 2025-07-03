@@ -15,6 +15,20 @@ class PayrollDetailRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+        $payroll = $this->getOwnerRecord();
+        $isUnlocked = session()->get("payroll-unlocked-{$payroll->id}", false);
+
+        if (! $isUnlocked) {
+            return $table
+                ->columns([])
+                ->emptyStateHeading('🔒 Payroll is locked')
+                ->emptyStateDescription('Please unlock this payroll using the button above to view the breakdown.')
+                ->emptyStateIcon('heroicon-o-lock-closed')
+                ->headerActions([]) // Prevent adding even when unlocked
+                ->actions([])
+                ->bulkActions([]);
+        }
+
         return $table
             ->columns([
                 TextColumn::make('name')
@@ -35,8 +49,8 @@ class PayrollDetailRelationManager extends RelationManager
                     ->money('IDR', locale: 'id_ID')
                     ->sortable(),
             ])
-            ->headerActions([]) // disable "Create"
-            ->actions([])       // disable row actions
-            ->bulkActions([]);  // disable bulk delete
+            ->headerActions([])
+            ->actions([])
+            ->bulkActions([]);
     }
 }
