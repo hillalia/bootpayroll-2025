@@ -6,6 +6,7 @@ use App\Filament\Admin\Resources\SalaryPeriodResource;
 use App\Models\Division;
 use App\Models\SalaryPeriod;
 use App\Services\PayrollGenerator;
+use App\Services\SalaryPeriodGenerator;
 use Filament\Actions\CreateAction;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
@@ -19,7 +20,43 @@ class ListSalaryPeriods extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            //CreateAction::make(),
+            Action::make('generateSalaryPeriods')
+                ->label('Generate Salary Periods')
+                ->icon('heroicon-m-calendar-days')
+                ->color('primary')
+                ->form([
+                    Select::make('year')
+                        ->label('Tahun')
+                        ->options(
+                            collect(range(now()->year - 2, now()->year + 2))
+                                ->mapWithKeys(fn($y) => [$y => $y])
+                        )
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $year = $data['year'];
+
+                    try {
+                        $count = app(SalaryPeriodGenerator::class)
+                            ->generateForYear($year);
+
+                        Notification::make()
+                            ->success()
+                            ->title('Salary Periods Generated')
+                            ->body("Berhasil generate {$count} periode untuk tahun {$year}.")
+                            ->persistent()
+                            ->duration(5000)
+                            ->send();
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->danger()
+                            ->title('Gagal Generate')
+                            ->body("Error: {$e->getMessage()}")
+                            ->persistent()
+                            ->send();
+                    }
+                }),
 
             Action::make('generatePayroll')
                 ->label('Generate Payroll')
