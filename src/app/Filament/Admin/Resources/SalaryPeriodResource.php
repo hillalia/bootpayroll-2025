@@ -13,11 +13,15 @@ use Filament\Tables\Table;
 class SalaryPeriodResource extends Resource
 {
     protected static ?string $model = SalaryPeriod::class;
+
     protected static ?string $navigationGroup = 'Manage Payroll';
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     protected static ?string $navigationLabel = 'Salary Periods';
     protected static ?string $pluralModelLabel = 'Salary Periods';
 
+    /**
+     * Form schema for create/edit SalaryPeriod.
+     */
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -38,35 +42,40 @@ class SalaryPeriodResource extends Resource
         ]);
     }
 
+    /**
+     * Table configuration for listing salary periods.
+     */
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            Tables\Columns\TextColumn::make('name')
-                ->label('Period')
-                ->sortable()
-                ->searchable(),
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Period')
+                    ->sortable()
+                    ->searchable(),
 
-            Tables\Columns\TextColumn::make('start_date')
-                ->label('Start')
-                ->date('d M Y')
-                ->sortable(),
+                Tables\Columns\TextColumn::make('start_date')
+                    ->label('Start')
+                    ->date('d M Y')
+                    ->sortable(),
 
-            Tables\Columns\TextColumn::make('end_date')
-                ->label('End')
-                ->date('d M Y')
-                ->sortable(),
+                Tables\Columns\TextColumn::make('end_date')
+                    ->label('End')
+                    ->date('d M Y')
+                    ->sortable(),
 
-            Tables\Columns\TextColumn::make('created_at')
-                ->label('Created')
-                ->dateTime('d M Y, H:i')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-        ])
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime('d M Y, H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
             ->filters([
-                // Optional: Add filters here
+                // Optional filters
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                // "Generate Payroll" added in List page
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

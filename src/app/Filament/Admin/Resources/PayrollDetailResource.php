@@ -3,41 +3,63 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PayrollDetailResource\Pages;
-use App\Filament\Admin\Resources\PayrollDetailResource\RelationManagers;
 use App\Models\PayrollDetail;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PayrollDetailResource extends Resource
 {
     protected static ?string $model = PayrollDetail::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Manage Payroll';
+    protected static ?string $navigationLabel = 'Payroll Details';
+    protected static ?string $pluralModelLabel = 'Payroll Details';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                //
-            ]);
+        return $form->schema([
+            // Usually not edited manually, skip
+        ]);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                //
-            ])
+        return $table->columns([
+            Tables\Columns\TextColumn::make('payroll.employee.user.name')
+                ->label('Employee')
+                ->sortable()
+                ->searchable(),
+
+            Tables\Columns\TextColumn::make('payroll.period.name')
+                ->label('Period')
+                ->sortable(),
+
+            Tables\Columns\TextColumn::make('name')
+                ->label('Component')
+                ->sortable()
+                ->searchable(),
+
+            Tables\Columns\BadgeColumn::make('type')
+                ->label('Type')
+                ->colors([
+                    'success' => 'earning',
+                    'danger' => 'deduction',
+                ])
+                ->sortable(),
+
+            // Tables\Columns\TextColumn::make('amount')
+            //     ->label('Amount')
+            //     ->money('IDR', locale: 'id_ID')
+            //     ->sortable(),
+        ])
             ->filters([
-                //
+                // Add optional filter by type or employee
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\ViewAction::make(),
+                // Remove edit if you want this read-only
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -48,17 +70,15 @@ class PayrollDetailResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListPayrollDetails::route('/'),
-            'create' => Pages\CreatePayrollDetail::route('/create'),
-            'edit' => Pages\EditPayrollDetail::route('/{record}/edit'),
+            // 'create' => Pages\CreatePayrollDetail::route('/create'), // optional
+            // 'edit' => Pages\EditPayrollDetail::route('/{record}/edit'),
         ];
     }
 }

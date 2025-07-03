@@ -8,14 +8,17 @@ class Payroll extends Model
 {
     protected $table = 'payrolls';
     protected $guarded = ['id'];
-    public function employee()
-    {
-        return $this->belongsTo(Employee::class);
-    }
+
+
 
     public function period()
     {
-        return $this->belongsTo(SalaryPeriod::class, 'salary_period_id');
+        return $this->belongsTo(\App\Models\SalaryPeriod::class, 'salary_period_id');
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
     }
 
     public function details()
