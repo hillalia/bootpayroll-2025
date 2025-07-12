@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeResource extends Resource
 {
@@ -141,5 +142,23 @@ class EmployeeResource extends Resource
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = Auth::user();
+        $pageName = request()->route()?->getName();
+
+        // Jika sedang mengakses halaman create, jangan batasi query
+        if (str_contains($pageName, 'create') || str_contains($pageName, 'edit')) {
+            return parent::getEloquentQuery();
+        }
+
+        if ($user->hasRole(['emp', 'hrd'])) {
+            return parent::getEloquentQuery()
+                ->where('user_id', $user->id);
+        }
+
+        return parent::getEloquentQuery();
     }
 }
