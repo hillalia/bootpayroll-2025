@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class PayrollResource extends Resource
 {
@@ -86,5 +88,20 @@ class PayrollResource extends Resource
             'index' => Pages\ListPayrolls::route('/'),
             'view' => Pages\ViewPayroll::route('/{record}'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        $user = Auth::user();
+
+        // Jika user login punya relasi employee
+        if ($user && $user->employee) {
+            return $query->where('employee_id', $user->employee->id);
+        }
+
+        // Jika bukan employee (misal admin), tampilkan semua data
+        return $query;
     }
 }

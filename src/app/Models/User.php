@@ -62,8 +62,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         }
     }
 
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
     }
+
+
 }
